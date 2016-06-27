@@ -20,7 +20,7 @@ app.init = function() {
     return false;
   });
   
-  $('#roomSelect').change(function(e) {
+  $('#roomSelect').change(e => {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
@@ -46,7 +46,7 @@ app.init = function() {
 
   $('#send').on('submit', app.handleSubmit);
 
-  $('#chats').on('click', '.username', function(e) {
+  $('#chats').on('click', '.username', e => {
     e.preventDefault;
     if (!app.friends[$(e.target).text()]) {
       app.addFriend($(e.target));  
@@ -60,10 +60,10 @@ app.send = function(message) {
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
-    success: function (data) {
+    success: data = > {
       console.log('chatterbox: Message sent', message);
     },
-    error: function (data) {
+    error: data => {
       console.error('chatterbox: Failed to send message', data);
     }
   });
@@ -75,27 +75,27 @@ app.fetch = function() {
     type: 'GET',
     data: {order: '-createdAt'}, // JSON.stringify(message),
     contentType: 'application/json',
-    success: function (data) {
+    success: data => {
       // console.log('chatterbox: Message received', data);
       app.clearMessages();
       app.populateChat(data.results);
       app.populateRooms(data.results);
     },
-    error: function (data) {
+    error: data => {
       console.error('chatterbox: Failed to receive message', data);
     }
   });
 
-  app.clearMessages = function() {
+  app.clearMessages = () => {
     $('#chats').children().remove();
     this.messageLog = [];
   };
 
-  app.addMessage = function(chatObj) {
+  app.addMessage = chatObj => {
     app.send(chatObj);
   };
 
-  app.createMessage = function(chatObj) {
+  app.createMessage = chatObj => {
     const tempMsg = $('<div class="chat"></div>');
     tempMsg.text(chatObj.text);
     const tempUsr = $('<div class="username"></div>');
@@ -108,12 +108,12 @@ app.fetch = function() {
     return tempMsg;
   };
 
-  app.populateChat = function(chatList) {
+  app.populateChat = chatList => {
     _.each(chatList, app.showMessage);
     app.messageLog = data;
   };
 
-  app.showMessage = function(chatObj) {
+  app.showMessage = chatObj => {
     // Takes in message
     // gives message data value of objectId
     var $newMsg = app.createMessage(chatObj);
@@ -126,29 +126,29 @@ app.fetch = function() {
     }
   };
 
-  app.refresh = function() {
+  app.refresh = () => {
     app.fetch();
   };
   
-  app.addRoom = function(roomName) {
+  app.addRoom = roomName => {
     $('#roomSelect').append($(`<option value="${roomName}"></option>`).text(roomName));
     rooms[roomName] = true;
   };
 
-  app.populateRooms = function(chatList) {
+  app.populateRooms = chatList => {
     $('#roomSelect').html('');
     rooms = {Main: true };
-    _.each(chatList, function(chatObj) {
+    _.each(chatList, chatObj => {
       if (chatObj.roomname !== undefined && chatObj.roomname !== '') {
         rooms[chatObj.roomname] = true;
       }
     });
-    _.each(rooms, function(val, roomName) {
+    _.each(rooms, (val, roomName) => {
       app.addRoom(roomName);
     });
   };
 
-  app.handleSubmit = function(e) {
+  app.handleSubmit = e => {
     e.preventDefault();
     e.stopPropagation();
     handleFlag = true;
@@ -162,14 +162,14 @@ app.fetch = function() {
     $('#message').val('');
   };
 
-  app.addFriend = function(e) {
+  app.addFriend = e => {
     e.addClass('friend');
     e.closest('.chat').addClass('bolded');
     app.friends[e.text()] = true;
   };
 };
 
-$('document').ready(function() {
+$('document').ready(() => {
 
   app.init();
 
